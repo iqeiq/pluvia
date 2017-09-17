@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Jellyfish
+  - Whale
   layers:
   - Default
   - TransparentFX
@@ -15,13 +17,13 @@ TagManager:
   - 
   - 
   - 
+  - Player
   - 
   - 
+  - Enemy
   - 
   - 
-  - 
-  - 
-  - 
+  - Object
   - 
   - 
   - 
