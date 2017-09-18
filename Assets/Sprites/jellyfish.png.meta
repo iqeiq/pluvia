@@ -1,15 +1,11 @@
 fileFormatVersion: 2
-guid: f2388c45a6591324c8d540e72b23dd6b
-timeCreated: 1505720415
+guid: 5b97a58799b6f9842a4372af55fcdd1f
+timeCreated: 1505738425
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: player_0
-    21300002: player_1
-    21300004: player_2
-    21300006: player_3
-    21300008: player_4
-    21300010: player_5
+    21300000: jellyfish_0
+    21300002: jellyfish_1
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -113,41 +109,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: player_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 388
-        width: 188
-        height: 388
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: player_1
-      rect:
-        serializedVersion: 2
-        x: 188
-        y: 388
-        width: 188
-        height: 388
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: player_2
+      name: jellyfish_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 188
-        height: 388
+        width: 152
+        height: 196
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,41 +123,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: player_3
+      name: jellyfish_1
       rect:
         serializedVersion: 2
-        x: 188
+        x: 152
         y: 0
-        width: 188
-        height: 388
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: player_4
-      rect:
-        serializedVersion: 2
-        x: 376
-        y: 0
-        width: 188
-        height: 388
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: player_5
-      rect:
-        serializedVersion: 2
-        x: 564
-        y: 0
-        width: 188
-        height: 388
+        width: 152
+        height: 196
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
