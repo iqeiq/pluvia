@@ -70,9 +70,20 @@ public class PlayerControl : MonoBehaviour {
                 }
             });
 
-       this.OnCollisionEnter2DAsObservable()
+        this.OnCollisionEnter2DAsObservable()
             .Select(col => col.gameObject)
             .Subscribe(obj => Debug.Log(obj.tag));
+
+
+        this.UpdateAsObservable()
+            .Select(_ => transform.position)
+            .Where(p => p.y < -10)
+            .Subscribe(_ => {
+                Debug.Log("Dead");
+
+                transform.position = GameObject.Find("start").transform.position;
+                sr.flipX = false;
+            });
     }
 	
 	void Update () {

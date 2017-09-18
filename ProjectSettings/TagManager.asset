@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Jellyfish
   - Whale
+  - Point
   layers:
   - Default
   - TransparentFX

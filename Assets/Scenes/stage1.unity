@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xMargin: 0.5
-  yMargin: 0.5
+  yMargin: 1.5
   xSmooth: 2
   ySmooth: 2
   maxXAndY: {x: 100, y: 50}
@@ -507,6 +507,34 @@ Transform:
   - {fileID: 859194431}
   m_Father: {fileID: 0}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &420788804
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 420788805}
+  m_Layer: 0
+  m_Name: start
+  m_TagString: Point
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &420788805
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 420788804}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.23, y: 3.44, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &427926943
 GameObject:
@@ -890,6 +918,11 @@ Prefab:
         type: 2}
       propertyPath: d
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114912136967639670, guid: 340fd377fc2f98e49a0a8cac484508c8,
+        type: 2}
+      propertyPath: moveOnStay
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 340fd377fc2f98e49a0a8cac484508c8, type: 2}
