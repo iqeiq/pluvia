@@ -1,10 +1,13 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PostProcessing;
 using UniRx;
 using UniRx.Triggers;
-
+using Random = UnityEngine.Random;
+　
 
 public class PlayerControl : MonoBehaviour {
 
@@ -12,33 +15,71 @@ public class PlayerControl : MonoBehaviour {
     public float jumpScale = 5.0f;
     public float moveScale = 6.0f;
     public float maxSpeed = 4.0f;
+    public int hp = 5;
 
     private Animator anim;
     private SpriteRenderer sr;
+    private Rigidbody2D rb;
     private Transform hand;
     private Transform joint;
-    private SpriteRenderer srh;
+    private int inithp;
     private bool canJump = false;
+    private bool canMove = false;
     private bool attack = false;
+    private bool invincible = false;
 
+    PostProcessingBehaviour ppb;
+    PostProcessingProfile profile;
+
+
+    void Init() {
+        canJump = false;
+        canMove = true;
+        attack = false;
+        hp = inithp;
+        invincible = false;
+        transform.position = GameObject.Find("start").transform.position;
+        hand.gameObject.SetActive(false);
+        Flip(false);
+        GetComponent<BoxCollider2D>().enabled = true;
+        sr.color = new Color(1, 1, 1, 1);
+        rb.velocity = Vector2.zero;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+
+        ppb = GameObject.Find("Main Camera").GetComponent<PostProcessingBehaviour>();
+        profile = Instantiate(ppb.profile);
+        ppb.profile = profile;
+    }
+
+    void Reset()
+    {
+        // ステージのリセットをここに書くのはヤバイ
+        GameObject.FindGameObjectsWithTag("Whale")
+            .Select(g => g.GetComponent<WhaleControl>())
+            .Where(w => w.isActiveAndEnabled)
+            .ToList()
+            .ForEach(w => w.Reset());
+    }
 
     void Start () {
 
+        inithp = hp;
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
         joint = transform.Find("joint");
         hand = joint.Find("hand");
-        hand.gameObject.SetActive(false);
-        srh = hand.Find("umbrella").GetComponent<SpriteRenderer>();
-
-        var rb = GetComponent<Rigidbody2D>();
         
         Transform gcl = transform.Find("groundcheck_left");
         Transform gcr = transform.Find("groundcheck_right");
 
+        Init();
+        
+        // ha?
 
         // move
         this.FixedUpdateAsObservable()
+            .Where(_ => canMove)
             .Select(_ => Math.Sign(Input.GetAxis("Move")))
             .Subscribe(val => {
                 if (Math.Abs(val) > 0.1f) {
@@ -58,11 +99,11 @@ public class PlayerControl : MonoBehaviour {
 
         // jump
         this.FixedUpdateAsObservable()
-            .Where(_ => canJump && Input.GetButton("Jump"))
+            .Where(_ => canJump && canMove && Input.GetButton("Jump"))
             .Subscribe(_ => {
                 canJump = false;
                 rb.AddForce(transform.up * jumpScale, ForceMode2D.Impulse);
-                Debug.Log("jump");
+                //Debug.Log("jump");
             });
 
         // grounded?
@@ -84,13 +125,13 @@ public class PlayerControl : MonoBehaviour {
         // attack
         this.UpdateAsObservable()
             .Where(_ => !attack && Input.GetButton("Attack"))
-            .Do(_ => Debug.Log("Attack"))
+            //.Do(_ => Debug.Log("Attack"))
             .Subscribe(_ => StartCoroutine("Attack"));
 
-        this.OnCollisionEnter2DAsObservable()
+        /*this.OnCollisionEnter2DAsObservable()
             .Select(col => col.gameObject)
             .Subscribe(obj => Debug.Log(obj.tag));
-
+        */
 
         // dead
         this.OnCollisionEnter2DAsObservable()
@@ -98,17 +139,100 @@ public class PlayerControl : MonoBehaviour {
             .Where(tag => tag.Equals("Dead"))
             .Subscribe(_ => {
                 Debug.Log("Dead");
-
-                transform.position = GameObject.Find("start").transform.position;
-                Flip(false);
+                Reset();
+                Init();
             });
+
+        this.OnTriggerEnter2DAsObservable()
+            .Merge(this.OnTriggerStay2DAsObservable())
+            .Where(col => !invincible && col.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            .Do(col => StartCoroutine(Damage()))
+            .Where(_ => hp == 0)
+            .Subscribe(_ => {
+                StartCoroutine("Die");
+            });
+            
+
+    }
+    
+
+    Vector2 _detectHitSide() {
+        RaycastHit2D hit;
+        if (hit = Physics2D.Raycast(transform.Find("raycheck").position, transform.up * -1.0f, Mathf.Infinity, 1 << LayerMask.NameToLayer("EnemyHit"))) {
+            Debug.Log(hit.normal);
+            return hit.normal;
+        }
+        // 要るのか？？
+        if (hit = Physics2D.Raycast(transform.Find("raycheck").position, transform.right * -1.0f, Mathf.Infinity, 1 << LayerMask.NameToLayer("EnemyHit")))
+        {
+            Debug.Log(hit.normal);
+            return hit.normal;
+        }
+        return Vector2.right;
     }
 
+    IEnumerator Damage() {
+        invincible = true;
+        canMove = false;
+        hp--;
+        Debug.Log("hp: " + hp);
+        var c = sr.color;
+        sr.color = new Color(c.r, c.g, c.b, 0.7f);
+        var norm = _detectHitSide();
+        rb.velocity = Vector2.Scale(Vector2.Reflect(rb.velocity, norm), new Vector2(1.0f, 1.1f));
+        if (rb.velocity.y < 0.001f)
+            rb.velocity += new Vector2(0.0f, 1.0f) * 3.0f;
+
+        var frame = 0;
+        // grain周り移動したい
+        var grain = profile.grain.settings;
+        while (frame < 90)
+        {
+            if (frame == 30) canMove = true;
+            sr.color = new Color(c.r, Random.Range(0.5f, c.g), Random.Range(0.5f, c.b), Random.Range(0.0f, 1.0f));
+            if (frame <= 30) {
+                var t = (15 - Math.Abs(frame - 15)) / 15.0f;
+                grain.intensity = 0.5f + (t * t) * (3f - (2f * t)) * 0.5f;
+                profile.grain.settings = grain;
+            }
+            yield return new WaitForFixedUpdate();
+            ++frame;
+        }
+        grain.intensity = 0.0f;
+        profile.grain.settings = grain;
+
+        sr.color = new Color(c.r, c.g, c.b, 1.0f);
+        invincible = false;
+
+        yield return new WaitForSeconds(0.5f);
+        canMove = true;
+        yield return new WaitForSeconds(1.5f);
+        sr.color = new Color(c.r, c.g, c.b, 1.0f);
+        
+    }
+
+ 
     void Flip(bool left) {
         sr.flipX = left;
-        //srh.flipX = left;
-        // TODO:
         joint.rotation = Quaternion.Euler(0, left ? 180 : 0, 0);
+    }
+
+    IEnumerator Die() {
+        Debug.Log("Die");
+        canMove = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+        var a = 1.0f;
+        while (a > 0.0f)
+        {
+            a -= 0.5f * Time.deltaTime;
+            var c = sr.color;
+            sr.color = new Color(c.r, c.g, c.b, a);
+            transform.rotation = Quaternion.Euler(0, 0, (1.0f - a) * 90);
+            yield return new WaitForFixedUpdate();
+        }
+        Reset();
+        Init();
+        Debug.Log("Dead");
     }
 
     float _currentAnimatorFrame() {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-
+　
 
 
 public class EnemyControl : MonoBehaviour {
 
-    public int hp = 3;
+    public int hp = 1;
 
 	void Start () {
         var anim = GetComponent<Animator>();
@@ -20,13 +20,13 @@ public class EnemyControl : MonoBehaviour {
             .Where(_ => hp == 0)
             .Subscribe(_ => {
                 anim.speed = 1;
-                GetComponent<BoxCollider2D>().enabled = false;
                 StartCoroutine("Die");
             });
     
 	}
 	
 	IEnumerator Die () {
+        GetComponent<BoxCollider2D>().enabled = false;
         var sr = GetComponent<SpriteRenderer>();
         var a = 1.0f;
         while (a > 0.0f) {

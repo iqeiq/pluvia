@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-
+　
 
 public class WhaleControl : MonoBehaviour {
 
@@ -16,19 +16,37 @@ public class WhaleControl : MonoBehaviour {
     private Rigidbody2D rb;
     private SpriteRenderer sp;
     private bool stay;
+    private Vector2 initPosition;
+    private Quaternion initRotation;
+    private IEnumerator c;
 
 
     void Start () {
         rb = GetComponent<Rigidbody2D>();
         sp = GetComponent<SpriteRenderer>();
+        initPosition = transform.position;
+        initRotation = transform.rotation;
+        
 
-        switch(type)
+        switch (type)
         {
-            case 0: StartCoroutine("Move"); break;
-            case 1: StartCoroutine("Move1"); break;
-            case 2: StartCoroutine("Move2"); break;
-            default: StartCoroutine("Move"); break;
+            case 0: StartCoroutine(c = Move()); break;
+            case 1: StartCoroutine(c = Move1()); break;
+            case 2: StartCoroutine(c = Move2()); break;
+            default: StartCoroutine(c = Move()); break;
         }
+    }
+
+    public void Reset()
+    {
+        transform.position = initPosition;
+        transform.rotation = initRotation;
+        if(c != null)
+        {
+            StopCoroutine(c);
+            StartCoroutine(c);
+        }
+
     }
 
     void OnCollisionEnter2D(Collision2D collision)
