@@ -124,7 +124,7 @@ public class PlayerControl : MonoBehaviour {
 
         // attack
         this.UpdateAsObservable()
-            .Where(_ => !attack && Input.GetButton("Attack"))
+            .Where(_ => !attack && Input.GetButtonDown("Attack"))
             //.Do(_ => Debug.Log("Attack"))
             .Subscribe(_ => StartCoroutine("Attack"));
 
@@ -247,14 +247,14 @@ public class PlayerControl : MonoBehaviour {
         anim.Play("player3", 0, _currentAnimatorFrame());
         hand.gameObject.SetActive(true);
         hand.transform.localRotation = Quaternion.Euler(0, 0, 60);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.15f);
        
 
         anim.SetInteger("attack", 2);
         // for sync walk motion
         anim.Play("player2", 0, _currentAnimatorFrame());
         hand.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
         
         anim.SetInteger("attack", 0);
         // for sync walk motion

@@ -9,6 +9,8 @@ TagManager:
   - Point
   - Dead
   - Attack
+  - Range
+  - Rainmaker
   layers:
   - Default
   - TransparentFX
@@ -28,7 +30,7 @@ TagManager:
   - 
   - Object
   - 
-  - 
+  - Range
   - Point
   - 
   - 
