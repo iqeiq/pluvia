@@ -34,3 +34,5 @@ sysinfo.txt
 *.unitypackage
 dist/
 Assets/PostProcessing/
+Assets/Cinemachine/
+Assets/Cinemachine.meta
