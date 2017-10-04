@@ -14,6 +14,7 @@ public class RainmakerControl : MonoBehaviour {
         
         var rig = GetComponent<Rigidbody2D>();
         var eff = GetComponent<PlatformEffector2D>();
+        var sr = GetComponent<SpriteRenderer>();
 
         var range = transform.Find("range").GetComponent<RangeListener>();
 
@@ -35,12 +36,15 @@ public class RainmakerControl : MonoBehaviour {
             });
 
         this.OnCollisionEnter2DAsObservable()
-            .Where(col => col.gameObject.tag.Equals("Whale"))
+            .Where(col => col.gameObject.tag.Equals("Whale") || col.gameObject.tag.Equals("Rainmaker"))
             .First()
             .Subscribe(_ => {
-                gameObject.layer = LayerMask.NameToLayer("Object");
-                eff.colliderMask += (1 << LayerMask.NameToLayer("Player")) + (1 << LayerMask.NameToLayer("Enemy"));
+                gameObject.layer = LayerMask.NameToLayer("Player");
+                //eff.colliderMask += (1 << LayerMask.NameToLayer("Player")) + (1 << LayerMask.NameToLayer("Enemy"));
                 Debug.Log("fix");
+                var c = sr.color;
+                c.a = 0.5f;
+                sr.color = c;
             });
 
     }

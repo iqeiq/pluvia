@@ -10,7 +10,8 @@ public class EnemyControl : MonoBehaviour {
 
     public int hp = 1;
 
-	void Start () {
+    
+	public void Start () {
         var anim = GetComponent<Animator>();
         anim.speed = 0;
 

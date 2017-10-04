@@ -32,7 +32,7 @@ public class CameraFollow : MonoBehaviour
     }
 
 
-    private void Update()
+    private void LateUpdate()
     {
         TrackPlayer();
     }
