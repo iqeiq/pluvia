@@ -8,6 +8,7 @@ using UniRx.Triggers;
 public class EnemyControl : BehaviourUtil {
 
     public int hp {get; private set;} = 1;
+    public BoxCollider2D trigger;
 
 	public void Start () {
         this.OnTriggerEnter2DAsObservable()
@@ -25,7 +26,11 @@ public class EnemyControl : BehaviourUtil {
 	}
 	
 	public IEnumerator Die () {
-        GetComponent<BoxCollider2D>().enabled = false;
+        if (trigger == null)
+            trigger = GetComponent<BoxCollider2D>();
+        
+        trigger.enabled = false;
+
         var a = 1f;
         
 		yield return this.UpdateAsObservable()

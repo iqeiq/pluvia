@@ -28,10 +28,6 @@ public class RainmakerControl : EnemyControl  {
             .Where(col => IsTag(col.gameObject, "Whale", "Rainmaker"))
             .Take(1)
             .Subscribe(_ => {
-                gameObject.layer = LayerMask.NameToLayer("Player");
-                //eff.colliderMask += (1 << LayerMask.NameToLayer("Player")) + (1 << LayerMask.NameToLayer("Enemy"));
-                Debug.Log("fix");
-                //SetColA(0.5f);
                 StartCoroutine(Die());
             });
 

@@ -1227,7 +1227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0a2d210d43163a49b15517010de4d4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 1
+  trigger: {fileID: 0}
 --- !u!95 &831264504
 Animator:
   serializedVersion: 3
@@ -2880,4 +2880,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ce722c6acabdc0448f0c6c29071653e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 1
+  trigger: {fileID: 2136556097}

@@ -66,4 +66,8 @@ public class BehaviourUtil : MonoBehaviour {
         return vec;
     }
 
+    public static float EaseInOut(float t) {
+        return (t * t) * (3f - (2f * t));
+    }
+
 }

@@ -75,8 +75,6 @@ public class PlayerControl : BehaviourUtil {
 
         Init();
         
-        // ha?
-
         // move
         this.FixedUpdateAsObservable()
             .Where(_ => canMove)
@@ -135,8 +133,9 @@ public class PlayerControl : BehaviourUtil {
             .Where(tag => tag.Equals("Dead"))
             .Subscribe(_ => {
                 Debug.Log("Dead");
-                Reset();
-                Init();
+                //Reset();
+                //Init();
+                GameOver();
             });
 
         this.OnTriggerEnter2DAsObservable()
@@ -227,9 +226,10 @@ public class PlayerControl : BehaviourUtil {
 			.ToYieldInstruction()
 			.AddTo(this);
 
-        Reset();
-        Init();
+        //Reset();
+        //Init();
         Debug.Log("Dead");
+        GameOver();
     }
 
     float _currentAnimatorFrame() {
@@ -259,6 +259,19 @@ public class PlayerControl : BehaviourUtil {
         hand.gameObject.SetActive(false);
         attack = false;
         
+    }
+
+    void Clear() {
+        invincible = true;
+        canMove = false;
+        GameObject.Find("GameManager").GetComponent<GameManager>().Clear();
+    }
+
+    void GameOver()
+    {
+        invincible = true;
+        canMove = false;
+        GameObject.Find("GameManager").GetComponent<GameManager>().GameOver();
     }
 
 }
