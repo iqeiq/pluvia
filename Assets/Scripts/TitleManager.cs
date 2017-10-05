@@ -11,8 +11,11 @@ public class TitleManager : MonoBehaviour {
 	void Start () {
 
         this.UpdateAsObservable()
-            .Select(_ => Input.GetButtonDown("Attack"))
-            .Where(b => b)
+            .Where(_ => Input.GetButtonDown("Cancel"))
+            .Subscribe(_ => Application.Quit());
+
+        this.UpdateAsObservable()
+            .Where(_ => Input.GetButtonDown("Attack"))
             .Take(1)
             .Subscribe(_ => {
                 Debug.Log("Game Start");

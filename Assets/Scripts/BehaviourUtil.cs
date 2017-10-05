@@ -70,4 +70,10 @@ public class BehaviourUtil : MonoBehaviour {
         return (t * t) * (3f - (2f * t));
     }
 
+    public static float EaseOut(float t)
+    {
+        t -= 1f;
+        return (t * t * t)  + 1;
+    }
+
 }

@@ -12,9 +12,7 @@ public class RainmakerControl : EnemyControl  {
         base.Start();
 
         var rig = GetComponent<Rigidbody2D>();
-        var eff = GetComponent<PlatformEffector2D>();
-        var sr = GetComponent<SpriteRenderer>();
-
+        
         var range = FindComponent<RangeListener>("range");
         
         range.Listen()

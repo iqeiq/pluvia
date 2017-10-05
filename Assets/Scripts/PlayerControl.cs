@@ -15,13 +15,15 @@ public class PlayerControl : BehaviourUtil {
     public float jumpScale = 5.0f;
     public float moveScale = 6.0f;
     public float maxSpeed = 4.0f;
-    public int hp = 5;
+    public int hp { get; private set; } = 5;
+    public int lycoris { get; private set; } = 0;
 
     private Animator anim;
     private SpriteRenderer sr;
     private Rigidbody2D rb;
     private Transform hand;
     private Transform joint;
+    private GameManager gm;
     private int inithp;
     private bool canJump = false;
     private bool canMove = false;
@@ -64,6 +66,7 @@ public class PlayerControl : BehaviourUtil {
     void Start () {
 
         inithp = hp;
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
@@ -135,6 +138,7 @@ public class PlayerControl : BehaviourUtil {
                 Debug.Log("Dead");
                 //Reset();
                 //Init();
+                GameObject.Find("GameManager").GetComponent<GameManager>().UpdateHP(0);
                 GameOver();
             });
 
@@ -146,7 +150,19 @@ public class PlayerControl : BehaviourUtil {
             .Subscribe(_ => {
                 StartCoroutine("Die");
             });
-            
+
+        this.OnTriggerEnter2DAsObservable()
+            .Where(col => IsTag(col.gameObject, "Point"))
+            .Do(col => {
+                ++lycoris;
+                // setに書けば良いのでは
+                gm.UpdateLycoris(lycoris);
+            })
+            .Where(_ => lycoris >= 5)
+            .Subscribe(_ => {
+                Clear();
+            });
+
 
     }
     
@@ -169,7 +185,10 @@ public class PlayerControl : BehaviourUtil {
     IEnumerator Damage() {
         invincible = true;
         canMove = false;
+
         hp--;
+        gm.UpdateHP(hp);
+
         Debug.Log("hp: " + hp);
         SetColA(0.7f);
         var norm = _detectHitSide();
@@ -180,6 +199,7 @@ public class PlayerControl : BehaviourUtil {
         var frame = 0;
         // grain周り移動したい
         var grain = profile.grain.settings;
+        // 邪悪
         while (frame < 90)
         {
             if (frame == 30) canMove = true;
@@ -212,8 +232,9 @@ public class PlayerControl : BehaviourUtil {
     IEnumerator Die() {
         Debug.Log("Die");
         canMove = false;
-        GetComponent<BoxCollider2D>().enabled = false;
-		var a = 1f;
+        invincible = true;
+        //GetComponent<BoxCollider2D>().enabled = false;
+        /*var a = 1f;
         
 		yield return this.UpdateAsObservable()
 			.Select(_ => Time.deltaTime)
@@ -221,15 +242,17 @@ public class PlayerControl : BehaviourUtil {
 			.TakeWhile(_ => a > 0f)
 			.Do(t => {
 				SetColA(a);
-				transform.rotation = Quaternion.Euler(0, 0, (1f - a) * 90);
+				//transform.rotation = Quaternion.Euler(0, 0, (1f - a) * 90);
 			})
 			.ToYieldInstruction()
 			.AddTo(this);
-
+        */
+        yield return null;
         //Reset();
         //Init();
         Debug.Log("Dead");
         GameOver();
+        
     }
 
     float _currentAnimatorFrame() {

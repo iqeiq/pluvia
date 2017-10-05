@@ -8,15 +8,39 @@ using UniRx.Triggers;
 
 public class GameManager : BehaviourUtil {
 
-	// Use this for initialization
-	void Start () {
-		
+    void Start () {
+        this.UpdateAsObservable()
+            .Where(_ => Input.GetButtonDown("Cancel"))
+            .Subscribe(_ => Application.Quit());
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // TODO: 雑
+    public void UpdateHP(int hp) {
+        var c = GameObject.Find("HP").transform;
+        while (true) {
+            ++hp;
+            var h = c.Find("HP-" + hp);
+            if (h == null) break;
+            h.GetComponent<Image>().color = new Color(0.1f, 0f, 0f, 0.2f);
+        }
+    }
+
+    // TODO: 雑
+    public void UpdateLycoris(int ly) {
+        var c = GameObject.Find("Lycoris").transform;
+        while (true)
+        {
+            var h = c.Find("ly-" + ly);
+            if (h == null) break;
+            var i = h.GetComponent<Image>();
+            var ic = i.color;
+            ic.r = 0.25f;
+            ic.g = 0.25f;
+            i.color = ic;
+            --ly;
+        }
+    }
+
 
     public void Clear() {
         Debug.Log("Clear");
@@ -48,8 +72,7 @@ public class GameManager : BehaviourUtil {
 
         GameObject.Find("GuideText").GetComponent<Text>().enabled = true;
         this.UpdateAsObservable()
-            .Select(_ => Input.GetButtonDown("Attack"))
-            .Where(b => b)
+            .Where(_ => Input.GetButtonDown("Attack"))
             .Take(1)
             .Subscribe(_ => {
                 Debug.Log("Game Clear");

@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4865521016346828}
   - component: {fileID: 212193600253095566}
   - component: {fileID: 61917649977635948}
+  - component: {fileID: 114044297434907558}
   m_Layer: 19
   m_Name: lycoris
   m_TagString: Point
@@ -96,6 +97,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8023572, y: 1.3505898}
   m_EdgeRadius: 0
+--- !u!114 &114044297434907558
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1132630422919204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f800d57e4a24f5a42ba35f4b922e1a1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!122 &122403487778373546
 Halo:
   m_ObjectHideFlags: 1
