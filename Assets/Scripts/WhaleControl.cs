@@ -11,7 +11,9 @@ public class WhaleControl : MonoBehaviour {
     public int type = 0;
     public float d = 10.0f;
     public float speed = 1.0f;
-    public bool moveOnStay = false;
+    //public bool moveOnStay = false;
+    private bool moveOnStay = false;
+
 
     private Rigidbody2D rb;
     private SpriteRenderer sp;
@@ -69,8 +71,7 @@ public class WhaleControl : MonoBehaviour {
         {
             if(!moveOnStay || stay)
             {
-                float diff = speed * Time.deltaTime;
-                t += diff;
+                t += speed * Time.deltaTime;
                 float val = (t * t) * (3f - (2f * t)) * max;
                 rb.MovePosition(rb.position + dir * (val - prev));
                 prev = val;

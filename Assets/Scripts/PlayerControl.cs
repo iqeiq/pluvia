@@ -9,7 +9,7 @@ using UniRx.Triggers;
 using Random = UnityEngine.Random;
 　
 
-public class PlayerControl : MonoBehaviour {
+public class PlayerControl : BehaviourUtil {
 
     public LayerMask groundLayer;
     public float jumpScale = 5.0f;
@@ -86,7 +86,7 @@ public class PlayerControl : MonoBehaviour {
                     rb.AddForce(transform.right * val * moveScale, ForceMode2D.Impulse);
                     if (Math.Abs(rb.velocity.x) > maxSpeed)
                     {
-                        rb.velocity = new Vector2(maxSpeed * Math.Sign(rb.velocity.x), rb.velocity.y);
+                        rb.velocity = SetX(rb.velocity, maxSpeed * Math.Sign(rb.velocity.x));
                     }
                     anim.speed = canJump || attack ? 1 : 0;
                     Flip(Math.Sign(val) < 0);
@@ -128,10 +128,6 @@ public class PlayerControl : MonoBehaviour {
             //.Do(_ => Debug.Log("Attack"))
             .Subscribe(_ => StartCoroutine("Attack"));
 
-        /*this.OnCollisionEnter2DAsObservable()
-            .Select(col => col.gameObject)
-            .Subscribe(obj => Debug.Log(obj.tag));
-        */
 
         // dead
         this.OnCollisionEnter2DAsObservable()
@@ -145,7 +141,7 @@ public class PlayerControl : MonoBehaviour {
 
         this.OnTriggerEnter2DAsObservable()
             .Merge(this.OnTriggerStay2DAsObservable())
-            .Where(col => !invincible && col.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            .Where(col => !invincible && IsLayer(col.gameObject, "Enemy"))
             .Do(col => StartCoroutine(Damage()))
             .Where(_ => hp == 0)
             .Subscribe(_ => {
@@ -176,8 +172,7 @@ public class PlayerControl : MonoBehaviour {
         canMove = false;
         hp--;
         Debug.Log("hp: " + hp);
-        var c = sr.color;
-        sr.color = new Color(c.r, c.g, c.b, 0.7f);
+        SetColA(0.7f);
         var norm = _detectHitSide();
         rb.velocity = Vector2.Scale(Vector2.Reflect(rb.velocity, norm), new Vector2(1.0f, 1.1f));
         if (rb.velocity.y < 0.001f)
@@ -189,6 +184,7 @@ public class PlayerControl : MonoBehaviour {
         while (frame < 90)
         {
             if (frame == 30) canMove = true;
+            var c = sr.color;
             sr.color = new Color(c.r, Random.Range(0.5f, c.g), Random.Range(0.5f, c.b), Random.Range(0.0f, 1.0f));
             if (frame <= 30) {
                 var t = (15 - Math.Abs(frame - 15)) / 15.0f;
@@ -201,14 +197,11 @@ public class PlayerControl : MonoBehaviour {
         grain.intensity = 0.0f;
         profile.grain.settings = grain;
 
-        sr.color = new Color(c.r, c.g, c.b, 1.0f);
+        sr.color = new Color(1f, 1f, 1f, 1f);
         invincible = false;
 
         yield return new WaitForSeconds(0.5f);
         canMove = true;
-        yield return new WaitForSeconds(1.5f);
-        sr.color = new Color(c.r, c.g, c.b, 1.0f);
-        
     }
 
  
@@ -221,15 +214,19 @@ public class PlayerControl : MonoBehaviour {
         Debug.Log("Die");
         canMove = false;
         GetComponent<BoxCollider2D>().enabled = false;
-        var a = 1.0f;
-        while (a > 0.0f)
-        {
-            a -= 0.5f * Time.deltaTime;
-            var c = sr.color;
-            sr.color = new Color(c.r, c.g, c.b, a);
-            transform.rotation = Quaternion.Euler(0, 0, (1.0f - a) * 90);
-            yield return new WaitForFixedUpdate();
-        }
+		var a = 1f;
+        
+		yield return this.UpdateAsObservable()
+			.Select(_ => Time.deltaTime)
+			.Do(t => a -= 0.5f * t)
+			.TakeWhile(_ => a > 0f)
+			.Do(t => {
+				SetColA(a);
+				transform.rotation = Quaternion.Euler(0, 0, (1f - a) * 90);
+			})
+			.ToYieldInstruction()
+			.AddTo(this);
+
         Reset();
         Init();
         Debug.Log("Dead");

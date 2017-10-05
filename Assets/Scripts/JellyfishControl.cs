@@ -7,9 +7,14 @@ using UniRx.Triggers;
 
 public class JellyfishControl : EnemyControl {
 
-	// Use this for initialization
-	new void Start () {
+    private Animator anim;
+    
+    new void Start () {
+
         base.Start();
+
+        anim = GetComponent<Animator>();
+        anim.speed = 0;
 
         var sr = GetComponent<SpriteRenderer>();
         var player = GameObject.Find("player");
@@ -25,12 +30,9 @@ public class JellyfishControl : EnemyControl {
                 t = (t + 2) % 360f;
                 sr.flipX = mv.x > 0;
             });
-
-
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    protected override void OnDead() {
+        anim.speed = 1;
+    }
 }
