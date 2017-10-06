@@ -45,7 +45,8 @@ public class JellyfishControl : EnemyControl {
                 mv += (Mathf.Sin(t * Mathf.Deg2Rad) * 0.002f) * transform.up;
                 transform.position += mv;
                 t = (t + 2) % 360f;
-                sr.flipX = mv.x > 0;
+                if(mv.magnitude > 0.05f)
+                    sr.flipX = mv.x > 0;
             });
         
         if(straight) {
