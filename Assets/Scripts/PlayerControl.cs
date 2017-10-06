@@ -55,6 +55,7 @@ public class PlayerControl : BehaviourUtil {
 
     void Reset()
     {
+        // unused
         // ステージのリセットをここに書くのはヤバイ
         GameObject.FindGameObjectsWithTag("Whale")
             .Select(g => g.GetComponent<WhaleControl>())
@@ -75,7 +76,7 @@ public class PlayerControl : BehaviourUtil {
         
         Transform gcl = transform.Find("groundcheck_left");
         Transform gcr = transform.Find("groundcheck_right");
-        Transform gcc = transform.Find("groundcheck_center");
+        //Transform gcc = transform.Find("groundcheck_center");
 
         Init();
         

@@ -9,6 +9,7 @@ public class EnemyControl : BehaviourUtil {
 
     [SerializeField]
     public int hp {get; protected set;} = 1;
+    protected bool isDead = false;
 
     public BoxCollider2D trigger;
 
@@ -19,6 +20,7 @@ public class EnemyControl : BehaviourUtil {
             .Do(_ => --hp)
             .Where(_ => hp == 0)
             .Subscribe(_ => {
+                isDead = true;
                 OnDead();
                 StartCoroutine(Die());
             });
@@ -29,7 +31,6 @@ public class EnemyControl : BehaviourUtil {
 	}
 	
 	public IEnumerator Die () {
-        Debug.Log("FDir");
         if (trigger == null)
             trigger = GetComponent<BoxCollider2D>();
         
@@ -41,7 +42,7 @@ public class EnemyControl : BehaviourUtil {
             .Select(_ => Time.deltaTime)
             .Do(t => a -= t)
 			.TakeWhile(_ => a > 0f)
-            .Do(t => SetColA(a))
+            .Do(_ => SetColA(a))
             .ToYieldInstruction()
             .AddTo(this);
 

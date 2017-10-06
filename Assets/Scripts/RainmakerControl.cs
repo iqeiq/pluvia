@@ -18,12 +18,7 @@ public class RainmakerControl : EnemyControl  {
 
         rig = GetComponent<Rigidbody2D>();
         
-        var range = FindComponent<RangeListener>("range");
-        
-        range.Listen()
-            .Where(col => IsTag(col.gameObject, "Player", "Enemy"))
-            .Take(1)
-            .Subscribe(_ => Emit());
+        StartCoroutine(LateStart());
 
         this.OnCollisionEnter2DAsObservable()
             .Where(col => IsTag(col.gameObject, "Whale", "Rainmaker"))
@@ -34,9 +29,26 @@ public class RainmakerControl : EnemyControl  {
 
     }
 
+    IEnumerator LateStart() {
+        var range = FindComponent<RangeListener>("range");
+        
+        yield return new WaitForSeconds(0.2f);
+
+        yield return range.Listen()
+            .Where(col => IsTag(col.gameObject, "Player", "Enemy"))
+            .Take(1)
+            .Do(_ => Emit())
+            .ToYieldInstruction()
+            .AddTo(range);
+        
+    }
+
     public void Emit() {
         rig.gravityScale = 1.0f;
-        if (parent != null)
+        if (parent != null) {
             parent.GetComponent<JellyfishControl>().Gone();
+            transform.parent = parent.transform.parent;
+        }
+            
     }
 }

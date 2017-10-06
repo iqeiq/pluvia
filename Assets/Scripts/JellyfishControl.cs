@@ -15,11 +15,14 @@ public class JellyfishControl : EnemyControl {
     public bool shift = true;
     [SerializeField]
     public bool straight = false;
+    public float straightFlip = 1f;
 
     public int vision = 5;
     public float speed = 0.2f;
+    public float d = 3;
 
     private Animator anim;
+    private SpriteRenderer sr;
     
     new void Start () {
         
@@ -28,12 +31,13 @@ public class JellyfishControl : EnemyControl {
         anim = GetComponent<Animator>();
         anim.speed = 0;
 
-        var sr = GetComponent<SpriteRenderer>();
+        sr = GetComponent<SpriteRenderer>();
         var player = GameObject.Find("player");
         var t = 0f;
         
         this.UpdateAsObservable()
-            .Where(_ => chase)
+            .Where(_ => !straight && !carrier)
+            .Where(_ => !isDead)
             .Select(_ => player.transform.position - transform.position)
             .Where(dir => (carrier ? Mathf.Abs(dir.x) : dir.magnitude) < vision)
             .Subscribe(dir => {
@@ -43,6 +47,14 @@ public class JellyfishControl : EnemyControl {
                 t = (t + 2) % 360f;
                 sr.flipX = mv.x > 0;
             });
+        
+        if(straight) {
+            // TODO; (-_-;)
+            shift = false;
+            chase = false;
+            StartCoroutine(Move());
+        }
+
 	}
 
     protected override void OnDead() {
@@ -54,17 +66,34 @@ public class JellyfishControl : EnemyControl {
         }
     }
 
-    public void Gone()
-    {
-        if (shift)
-        {
+    public void Gone() {
+        if (shift) {
             carrier = false;
-        }
-        else if (!straight)
-        {
+        } else if (!straight) {
             StartCoroutine(Die());
         }
     }
 
+    IEnumerator _move(Vector2 dir, float max) {
+        float t = 0.0f;
+        sr.flipX = dir.x > 0;
+        
+        while (t < 1.0f && !isDead) {
+            var diff = speed * Time.deltaTime;
+            t += diff;
+            Vector3 temp = dir * (diff * max);
+            transform.position += temp;
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
+    IEnumerator Move() {
+        while (true) {
+            yield return _move(new Vector2(-1 * straightFlip, 0), d);
+            yield return new WaitForSeconds(1);
+            yield return _move(new Vector2(1 * straightFlip, 0), d);
+            yield return new WaitForSeconds(1);
+        }
+    }
    
 }
