@@ -29,6 +29,7 @@ public class EnemyControl : BehaviourUtil {
 	}
 	
 	public IEnumerator Die () {
+        Debug.Log("FDir");
         if (trigger == null)
             trigger = GetComponent<BoxCollider2D>();
         

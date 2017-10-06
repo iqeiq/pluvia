@@ -357,7 +357,8 @@ MonoBehaviour:
   trigger: {fileID: 0}
   carrier: 1
   chase: 1
-  shift: 1
+  shift: 0
+  straight: 0
   vision: 5
   speed: 0.5
 --- !u!114 &114380818143871972

@@ -13,6 +13,8 @@ public class JellyfishControl : EnemyControl {
     public bool chase = true;
     [SerializeField]
     public bool shift = true;
+    [SerializeField]
+    public bool straight = false;
 
     public int vision = 5;
     public float speed = 0.2f;
@@ -54,6 +56,15 @@ public class JellyfishControl : EnemyControl {
 
     public void Gone()
     {
-        if(shift) carrier = false;
+        if (shift)
+        {
+            carrier = false;
+        }
+        else if (!straight)
+        {
+            StartCoroutine(Die());
+        }
     }
+
+   
 }
