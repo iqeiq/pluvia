@@ -19,7 +19,8 @@ public class ViewEffect : MonoBehaviour {
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        material.SetFloat("_Amount", amount);
+        //material.SetFloat("_Amount", amount);
+        material.SetFloat("_Power", amount);
         Graphics.Blit(src, dest, material);
     }
 

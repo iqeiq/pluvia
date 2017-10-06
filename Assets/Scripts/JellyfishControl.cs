@@ -36,7 +36,7 @@ public class JellyfishControl : EnemyControl {
         var t = 0f;
         
         this.UpdateAsObservable()
-            .Where(_ => !straight && !carrier)
+            .Where(_ => !straight && chase)
             .Where(_ => !isDead)
             .Select(_ => player.transform.position - transform.position)
             .Where(dir => (carrier ? Mathf.Abs(dir.x) : dir.magnitude) < vision)

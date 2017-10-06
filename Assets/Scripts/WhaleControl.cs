@@ -13,6 +13,8 @@ public class WhaleControl : MonoBehaviour {
     public float speed = 1.0f;
     //public bool moveOnStay = false;
     private bool moveOnStay = false;
+    public int flipX = 1;
+    public int flipY = 1;
 
 
     private Rigidbody2D rb;
@@ -82,13 +84,13 @@ public class WhaleControl : MonoBehaviour {
 
     IEnumerator Move() {
         while(true) {
-            yield return _move(new Vector2(1, 0), d);
+            yield return _move(new Vector2(1 * flipX, 0), d);
             yield return new WaitForSeconds(1);
-            yield return _move(new Vector2(0, 1), d);
+            yield return _move(new Vector2(0, 1 * flipY), d);
             yield return new WaitForSeconds(1);
-            yield return _move(new Vector2(-1, 0), d);
+            yield return _move(new Vector2(-1 * flipX, 0), d);
             yield return new WaitForSeconds(1);
-            yield return _move(new Vector2(0, -1), d);
+            yield return _move(new Vector2(0, -1 * flipY), d);
             yield return new WaitForSeconds(1);
         }
     }
@@ -97,9 +99,9 @@ public class WhaleControl : MonoBehaviour {
     {
         while (true)
         {
-            yield return _move(new Vector2(1, 0), d);
+            yield return _move(new Vector2(1 * flipX, 0), d);
             yield return new WaitForSeconds(1);
-            yield return _move(new Vector2(-1, 0), d);
+            yield return _move(new Vector2(-1 * flipX, 0), d);
             yield return new WaitForSeconds(1);
         }
     }
@@ -108,9 +110,9 @@ public class WhaleControl : MonoBehaviour {
     {
         while (true)
         {
-            yield return _move(new Vector2(0, 1), d);
+            yield return _move(new Vector2(0, 1 * flipY), d);
             yield return new WaitForSeconds(1);
-            yield return _move(new Vector2(0, -1), d);
+            yield return _move(new Vector2(0, -1 * flipY), d);
             yield return new WaitForSeconds(1);
         }
     }

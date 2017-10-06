@@ -67,7 +67,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1536160659548344
 GameObject:
   m_ObjectHideFlags: 1
@@ -282,7 +282,7 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1411657521745908}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -359,6 +359,7 @@ MonoBehaviour:
   chase: 0
   shift: 0
   straight: 1
+  straightFlip: 1
   vision: 5
   speed: 0.3
   d: 10
