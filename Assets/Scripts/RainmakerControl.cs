@@ -7,20 +7,23 @@ using UniRx.Triggers;
 
 public class RainmakerControl : EnemyControl  {
 
+    Rigidbody2D rig;
+    [SerializeField]
+    private GameObject parent;
+
+
     new void Start()
     {
         base.Start();
 
-        var rig = GetComponent<Rigidbody2D>();
+        rig = GetComponent<Rigidbody2D>();
         
         var range = FindComponent<RangeListener>("range");
         
         range.Listen()
             .Where(col => IsTag(col.gameObject, "Player", "Enemy"))
             .Take(1)
-            .Subscribe(_ => {
-                rig.gravityScale = 1.0f;
-            });
+            .Subscribe(_ => Emit());
 
         this.OnCollisionEnter2DAsObservable()
             .Where(col => IsTag(col.gameObject, "Whale", "Rainmaker"))
@@ -29,5 +32,11 @@ public class RainmakerControl : EnemyControl  {
                 StartCoroutine(Die());
             });
 
+    }
+
+    public void Emit() {
+        rig.gravityScale = 1.0f;
+        if (parent != null)
+            parent.GetComponent<JellyfishControl>().Gone();
     }
 }

@@ -75,6 +75,7 @@ public class PlayerControl : BehaviourUtil {
         
         Transform gcl = transform.Find("groundcheck_left");
         Transform gcr = transform.Find("groundcheck_right");
+        Transform gcc = transform.Find("groundcheck_center");
 
         Init();
         
@@ -109,9 +110,12 @@ public class PlayerControl : BehaviourUtil {
 
         // grounded?
         this.UpdateAsObservable()
-            .Select(_ => 
-                Physics2D.Linecast(transform.position, gcl.position, groundLayer) ||
-                Physics2D.Linecast(transform.position, gcr.position, groundLayer)
+            .Select(_ =>
+                //Physics2D.Linecast(transform.position, gcc.position, groundLayer) && 
+                //(
+                    Physics2D.Linecast(transform.position, gcl.position, groundLayer) ||
+                    Physics2D.Linecast(transform.position, gcr.position, groundLayer)
+                //)
             )
             .DistinctUntilChanged()
             .Subscribe(val => {
@@ -287,7 +291,11 @@ public class PlayerControl : BehaviourUtil {
     void Clear() {
         invincible = true;
         canMove = false;
+        anim.speed = 0;
         GameObject.Find("GameManager").GetComponent<GameManager>().Clear();
+        var bloom = profile.bloom.settings;
+        profile.bloom.enabled = true;
+        profile.bloom.settings = bloom;
     }
 
     void GameOver()

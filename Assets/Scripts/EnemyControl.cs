@@ -7,8 +7,11 @@ using UniRx.Triggers;
 
 public class EnemyControl : BehaviourUtil {
 
-    public int hp {get; private set;} = 1;
+    [SerializeField]
+    public int hp {get; protected set;} = 1;
+
     public BoxCollider2D trigger;
+
 
 	public void Start () {
         this.OnTriggerEnter2DAsObservable()

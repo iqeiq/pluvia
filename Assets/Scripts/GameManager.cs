@@ -16,7 +16,7 @@ public class GameManager : BehaviourUtil {
 
     // TODO: 雑
     public void UpdateHP(int hp) {
-        var c = GameObject.Find("HP").transform;
+        var c = GameObject.Find("UI-HP").transform;
         while (true) {
             ++hp;
             var h = c.Find("HP-" + hp);
@@ -27,15 +27,15 @@ public class GameManager : BehaviourUtil {
 
     // TODO: 雑
     public void UpdateLycoris(int ly) {
-        var c = GameObject.Find("Lycoris").transform;
+        var c = GameObject.Find("UI-Lycoris").transform;
         while (true)
         {
             var h = c.Find("ly-" + ly);
             if (h == null) break;
             var i = h.GetComponent<Image>();
             var ic = i.color;
-            ic.r = 0.25f;
-            ic.g = 0.25f;
+            ic.r = 0.5f;
+            ic.g = 0.5f;
             i.color = ic;
             --ly;
         }
