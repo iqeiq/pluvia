@@ -29,6 +29,7 @@ public class PlayerControl : BehaviourUtil {
     private bool canMove = false;
     private bool attack = false;
     private bool invincible = false;
+    private bool isDead = false;
 
     PostProcessingBehaviour ppb;
     PostProcessingProfile profile;
@@ -38,6 +39,7 @@ public class PlayerControl : BehaviourUtil {
         canJump = false;
         canMove = true;
         attack = false;
+        isDead = false;
         hp = inithp;
         invincible = false;
         transform.position = GameObject.Find("start").transform.position;
@@ -153,7 +155,8 @@ public class PlayerControl : BehaviourUtil {
             .Do(col => StartCoroutine(Damage()))
             .Where(_ => hp == 0)
             .Subscribe(_ => {
-                StartCoroutine("Die");
+                isDead = true;
+                StartCoroutine(Die());
             });
 
         this.OnTriggerEnter2DAsObservable()
@@ -207,7 +210,7 @@ public class PlayerControl : BehaviourUtil {
         // 邪悪
         while (frame < 90)
         {
-            if (frame == 30) canMove = true;
+            if (frame == 30 && !isDead) canMove = true;
             var c = sr.color;
             sr.color = new Color(c.r, Random.Range(0.5f, c.g), Random.Range(0.5f, c.b), Random.Range(0.0f, 1.0f));
             if (frame <= 30) {
@@ -225,7 +228,6 @@ public class PlayerControl : BehaviourUtil {
         invincible = false;
 
         yield return new WaitForSeconds(0.5f);
-        canMove = true;
     }
 
  
